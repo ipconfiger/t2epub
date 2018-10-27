@@ -28,6 +28,8 @@ Transfer TxT file to epub format
     --name # Specify book name
     
     --author # Specify author name
+    
+    --cover # Specify cover image
 
 
 

@@ -3,8 +3,7 @@ import os
 import shutil
 import uuid
 
-import pypub
-from utilitis import slice_chapter, render_template
+from utilitis import slice_chapter, render_template, filename_from_path
 from templates import CONTAINER_XML, CSS, CHAPTER_TEMPLATE, NAV_TEMPLATE, PACKAGE_OPF_TEMPLATE
 
 
@@ -21,6 +20,8 @@ class Processor(object):
     def __init__(self, filepath, exp, limit):
         self.filepath = filepath
         self.chapters = []
+        self.cover = None
+        self.cover_name = None
         idx = 1
         for title, content in slice_chapter(filepath, exp, limit):
             self.chapters.append(Chapter(idx, title, content))
@@ -40,6 +41,11 @@ class Processor(object):
         os.mkdir(root)
         css_path = os.path.join(root, 'css')
         os.mkdir(css_path)
+        img_path = os.path.join(root, "image")
+        os.mkdir(img_path)
+        if self.cover:
+            cover_path = os.path.join(img_path, self.cover_name)
+            shutil.copy(self.cover, cover_path)
         with open(os.path.join(css_path, 'epub-spec.css'), 'w') as f:
             f.write(CSS)
         self.gen_xhtml_files(root)
@@ -60,7 +66,13 @@ class Processor(object):
 
     def gen_opf_file(self, root, name, author):
         opf_path = os.path.join(root, 'package.opf')
-        opf_xml = render_template(PACKAGE_OPF_TEMPLATE, chapters=self.chapters, name=name, author=author, uid=uuid.uuid4().hex)
+        opf_xml = render_template(PACKAGE_OPF_TEMPLATE,
+                                  chapters=self.chapters,
+                                  name=name,
+                                  author=author,
+                                  cover=self.cover_name,
+                                  uid=uuid.uuid4().hex
+                                  )
         with open(opf_path, 'w') as f:
             f.write(opf_xml)
 
@@ -85,7 +97,10 @@ class Processor(object):
         return epub_full_name
 
 
-    def gen(self, name, author):
+    def gen(self, name, author, cover):
+        self.cover = cover
+        if cover:
+            self.cover_name = filename_from_path(cover)
         book_name = name if name else self.filepath.split(os.sep)[-1].split('.')[0]
         root_path = os.getcwd()
         root_dir_path = os.path.join(root_path, book_name)

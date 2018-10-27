@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 setup(name='t2epub',
-            version='0.0.1',
+            version='0.0.2',
             description='Commnadline tool to transfer txt file to epub format',
             author='Alexander Li',
             author_email='superpowerlee@gmail.com',

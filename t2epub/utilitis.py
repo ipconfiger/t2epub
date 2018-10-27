@@ -1,13 +1,17 @@
 # coding=utf8
+import os
 import re
 from jinja2 import Environment, BaseLoader
+
+
+def filename_from_path(path):
+    return path.split(os.sep)[-1]
 
 
 def render_template (template, **data):
     template = Environment(loader=BaseLoader).from_string(template)
     _html = template.render(**data)
     return _html
-
 
 
 def txt2lines(file_path):

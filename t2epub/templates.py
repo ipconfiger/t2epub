@@ -771,6 +771,9 @@ PACKAGE_OPF_TEMPLATE="""<?xml version="1.0" encoding="UTF-8"?>
       <item href="xhtml/{{ chapter.file_name }}" id="chapter_{{ chapter.idx }}" media-type="application/xhtml+xml"/>
       {% endfor %}
       <item href="css/epub-spec.css" media-type="text/css" id="css"/>
+      {% if cover %}
+      <item href="image/{{ cover }}" media-type="image/jpeg" id="ci" properties="cover-image"/>
+      {% endif %}
    </manifest>
    <spine>
       <itemref idref="nav" linear="no"/>

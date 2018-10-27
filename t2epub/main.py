@@ -21,9 +21,10 @@ def cmd():
 @click.argument('file_path', type=click.Path())
 @click.option('--exp', default=EXP)
 @click.option('--limit', default=40)
-@click.option('--name', default='', help='the book name')
-@click.option('--author', default='Unknown', help='the book name')
-def process(file_path, exp, limit, name, author):
+@click.option('--name', default='', help='The Book Name')
+@click.option('--author', default='Unknown', help='The Author Name')
+@click.option('--cover', default='', help='The Cover Image Path')
+def process(file_path, exp, limit, name, author, cover):
     """
     Actualy process txt file to epub
     :param file_path: input txt file path
@@ -40,7 +41,7 @@ def process(file_path, exp, limit, name, author):
     :rtype:
     """
     processor = Processor(file_path, exp, limit)
-    processor.gen(name, author)
+    processor.gen(name, author, cover)
     click.echo("Process complete!")
     
     
